@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211214_Factory_Adapter_Descriptor_Output_Mode_생성및출력\Entry.cpp">
+    <ClCompile Include="211215_d3d11__Device_DeviceContext_SwapChain_CreateDevice\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211214_Factory_Adapter_Descriptor_Output_Mode_생성및출력\Example.cpp">
+    <ClCompile Include="211215_d3d11__Device_DeviceContext_SwapChain_CreateDevice\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

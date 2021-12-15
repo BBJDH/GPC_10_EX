@@ -1,5 +1,5 @@
 #pragma comment(linker,"/entry:WinMainCRTStartup /subsystem:console")
-#pragma comment(lib,"dxgi.lib")
+
 #include<Windows.h>
 #include<cassert>
 #include<dxgi.h>
@@ -88,8 +88,8 @@ namespace Example
                                     cout << endl;
                                     cout << "Resolution\t: " << Modes[i].Width << "x" << Modes[i].Height << endl;
                                     cout << "Refresh Rate\t: " 
-                                         << static_cast<float>
-                                           (Modes[i].RefreshRate.Numerator / Modes[i].RefreshRate.Denominator)
+                                        << static_cast<float>
+                                        (Modes[i].RefreshRate.Numerator / Modes[i].RefreshRate.Denominator)
                                                                                                          << endl;
                                     cout << "Scanline Ordering\t: " << Modes[i].ScanlineOrdering         << endl;
                                     cout << "Scaling\t: " << Modes[i].Scaling                            << endl;
