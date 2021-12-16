@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211215_d3d11__Device_DeviceContext_SwapChain_CreateDevice\Entry.cpp">
+    <ClCompile Include="211216_SwapChain시작_BufferDesc\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211215_d3d11__Device_DeviceContext_SwapChain_CreateDevice\Example.cpp">
+    <ClCompile Include="211216_SwapChain시작_BufferDesc\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
