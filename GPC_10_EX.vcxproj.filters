@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211216_SwapChain시작_BufferDesc\Entry.cpp">
+    <ClCompile Include="211217_\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211216_SwapChain시작_BufferDesc\Example.cpp">
+    <ClCompile Include="211217_\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
