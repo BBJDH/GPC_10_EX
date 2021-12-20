@@ -5,7 +5,12 @@
 #include<d3d11.h>
 
 using namespace std;
-
+namespace Time
+{
+    void Procedure
+    (HWND   const hWindow, UINT   const uMessage, WPARAM const wParameter, LPARAM const lParameter);
+    bool isinterval();
+}
 #if not defined _DEBUG
 #define MUST(Expression) (      (         (Expression)))
 #endif
@@ -22,7 +27,29 @@ namespace Example
         ID3D11DeviceContext * DeviceContext;  //Set, Draw, ...파이프 라인을 추상화
         IDXGISwapChain      * SwapChain;   //present, ... 화전면환을 총괄, 백버퍼관리
         ID3D11RenderTargetView * RenderTargetView;
-        float color_value =0.0f;
+        float light_value =0.0f;
+        bool light_up = true;
+    }
+    void lightcontrol()
+    {
+        if (light_up)
+            light_value += 0.01f;
+        else
+            light_value -= 0.01f;
+        //if ((1.0f - light_value) < 0.01f)
+        //    light_up = false;
+        //if ((light_value) < 0.01f)
+        //    light_up = true;
+        if (light_value > 1.0f)
+        {
+            light_up = false;
+            light_value = 1.0f;
+        }
+        if (light_value < 0.01f)
+        {
+            light_up = true;
+            light_value = 0.0f;
+        }
     }
 
     LRESULT CALLBACK Procedure
@@ -136,11 +163,13 @@ namespace Example
         case WM_APP:
         {
             //TODO: 검은색 화면에서 점점 흰색 화면으로 변하고 흰색이 되면 다시 검은색이 되도록 반복
-            if((1.0f - color_value)>0.1f)
-                color_value +=0.02f;
-            else 
-                color_value -= 0.02f;
-            float const Color[4] = { color_value, color_value, color_value, 1.0f };
+            //이전에 배웠던 Time 프로시져를 활용하였습니다
+
+            Time::Procedure(hWindow,uMessage,wParameter,lParameter); 
+            if(Time::isinterval())                      //0.03초 이상 델타타임 누적시 시행
+                lightcontrol();
+
+            float const Color[4] = { light_value, light_value, light_value, 1.0f };
 
             DeviceContext->ClearRenderTargetView(RenderTargetView,Color);
 

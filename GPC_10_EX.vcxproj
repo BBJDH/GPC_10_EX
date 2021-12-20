@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="211220_Resource_RTV\Entry.cpp" />
     <ClCompile Include="211220_Resource_RTV\Example.cpp" />
+    <ClCompile Include="211220_Resource_RTV\Time.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
