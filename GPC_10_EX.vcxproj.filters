@@ -15,14 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211220_Resource_RTV\Entry.cpp">
+    <ClCompile Include="211221_간소화_dx디버깅_Viewport_IA시작\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211220_Resource_RTV\Example.cpp">
+    <ClCompile Include="211221_간소화_dx디버깅_Viewport_IA시작\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211220_Resource_RTV\Time.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\HLSL\Vertex.hlsl" />
+    <FxCompile Include="Shader\HLSL\Pixel.hlsl" />
   </ItemGroup>
 </Project>
