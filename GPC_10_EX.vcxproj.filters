@@ -15,15 +15,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211221_간소화_dx디버깅_Viewport_IA시작\Entry.cpp">
+    <ClCompile Include="211222_Shader작성_Inputelementdesc_Semantic_hlslCompile_IL,VS,PSLink\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211221_간소화_dx디버깅_Viewport_IA시작\Example.cpp">
+    <ClCompile Include="211222_Shader작성_Inputelementdesc_Semantic_hlslCompile_IL,VS,PSLink\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\HLSL\Vertex.hlsl" />
+    <None Include="Shader\HLSL\Layout.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
     <FxCompile Include="Shader\HLSL\Pixel.hlsl" />
+    <FxCompile Include="Shader\HLSL\Vertex.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader\Bytecode\Pixel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\Bytecode\Vertex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
