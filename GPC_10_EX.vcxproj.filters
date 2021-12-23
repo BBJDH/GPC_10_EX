@@ -15,14 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211222_Shader작성_Inputelementdesc_Semantic_hlslCompile_IL,VS,PSLink\Entry.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="211222_Shader작성_Inputelementdesc_Semantic_hlslCompile_IL,VS,PSLink\Example.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Shader\HLSL\Layout.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -36,5 +28,13 @@
     <ClInclude Include="Shader\Bytecode\Vertex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="211223_VertexBuffer_BufferDesc_SubresourceData_IndexBuffer\Entry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="211223_VertexBuffer_BufferDesc_SubresourceData_IndexBuffer\Example.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211222_Shader작성_Inputelementdesc_Semantic_hlslCompile_IL,VS,PSLink\Entry.cpp" />
-    <ClCompile Include="211222_Shader작성_Inputelementdesc_Semantic_hlslCompile_IL,VS,PSLink\Example.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Shader\HLSL\Layout.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +64,10 @@
   <ItemGroup>
     <ClInclude Include="Shader\Bytecode\Pixel.h" />
     <ClInclude Include="Shader\Bytecode\Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="211223_VertexBuffer_BufferDesc_SubresourceData_IndexBuffer\Entry.cpp" />
+    <ClCompile Include="211223_VertexBuffer_BufferDesc_SubresourceData_IndexBuffer\Example.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
