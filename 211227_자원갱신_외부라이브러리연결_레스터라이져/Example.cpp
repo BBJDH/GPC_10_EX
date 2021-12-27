@@ -2,7 +2,7 @@
 //#pragma comment(lib,"d3d11.lib")
 
 #include<cassert>
-#include<d3d11.h>
+#include<d3d11.h> //windows 헤더파일을 포함하고 있다. 라이브러리 파일로 선언 부분만 정의되어있다 내부 구성은 공개되어 있지 않음
 #include"../FreeImage.h"
 //dll : 다이나믹 링크 라이브러리 : 동적으로 필요한 내용에대해서 라이브러리 로드가 시행
 
@@ -16,11 +16,12 @@ using namespace std;
 //각각의 프로시져로 중계를 해준다
 //옵션 - 텍스트 편집기 ctrl 정의 피킹 키 편집 가능
 
+
 namespace Example
 {
     namespace
     {
-        ID3D11Device        * Device;         //Create, ...
+        ID3D11Device        * Device;         //Create, ... 컴인터페이스 생성 (컴인터페이스 : 컴퓨터가 생성을 도와주는 인터페이스)
         ID3D11DeviceContext * DeviceContext;  //Set, Draw, ...파이프 라인을 추상화
         IDXGISwapChain      * SwapChain;   //present, ... 화전면환을 총괄, 백버퍼관리
 
@@ -43,20 +44,22 @@ namespace Example
         case WM_CREATE:
         {
             {
+                //Swap Chain 생성
+
                 DXGI_SWAP_CHAIN_DESC Descriptor = DXGI_SWAP_CHAIN_DESC();
 
                 Descriptor.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//하나의 채널당 얼만큼의 메모리를 할당할지
+                //형식 : DXGI_MODE_DESC(너비높이,주사율,데이터 포멧형식 등) 
                 //각 채널별 8비트 할당(0~255),UNORM 크기 1로 정규화
                 //BPP : Bits Per Pixel(32), BPC : Bits Per Channel(8)
                 //Signed NORM : -1 ~ +1 , Unsigned NORM : 0 ~ 1
 
-                Descriptor.SampleDesc.Count = 1;
+                Descriptor.SampleDesc.Count = 1;        //최대 32 개까지 가능
                 Descriptor.BufferUsage      = DXGI_USAGE_RENDER_TARGET_OUTPUT;
                 Descriptor.BufferCount      = 1;
                 Descriptor.OutputWindow     = hWindow;
                 Descriptor.Windowed         = true;
                 Descriptor.Flags            = 0;
-
                 //어댑터와 스왑체인은 같은 팩토리에서 생성되어야 한다
                 MUST(D3D11CreateDeviceAndSwapChain
                 (
@@ -141,8 +144,7 @@ namespace Example
                     PixelShader->Release();
                 }
             }
-            {
-            }
+
             {
                 //Vertex buffer
 
@@ -364,3 +366,29 @@ namespace Example
     }
 
 }
+//IA -> VS -> HS -> TS -> DS -> GS -> SO -> RS-> PS -> OM 의 각 세부 단계가 있다
+             //------코드 수정 불가-------//
+//해당 구간에서 인덱스 버퍼 설정되고 설정을 읽어오거나 하는것들이 시행된다
+
+// IA
+// VertexBuffer
+// IndexBuffer
+// Primitive Topology
+// Input Layout
+// 
+// 
+// VS
+// SV(System Value)
+// 함수를 만들어서 
+// 정점에 대한 연산
+// 
+// 
+// RS
+// Viewport
+// 
+// PS
+// SV_Target
+// 
+// OM
+// RendertagetView
+//
