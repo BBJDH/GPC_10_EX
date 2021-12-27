@@ -30,10 +30,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211224_Indexbuffer설명_Draw_그래픽디버깅_버텍스버퍼분할_간소화\Entry.cpp">
+    <ClCompile Include="211227_자원갱신_외부라이브러리연결_레스터라이져\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211224_Indexbuffer설명_Draw_그래픽디버깅_버텍스버퍼분할_간소화\Example.cpp">
+    <ClCompile Include="211227_자원갱신_외부라이브러리연결_레스터라이져\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
