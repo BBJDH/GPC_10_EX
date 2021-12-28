@@ -207,7 +207,7 @@ namespace Example
 
                 D3D11_BUFFER_DESC Descritor
                 {
-                    sizeof(float[4][4]),
+                    sizeof(float[4][2]),
                     D3D11_USAGE_DYNAMIC,  
                     D3D11_BIND_VERTEX_BUFFER,
                     D3D10_CPU_ACCESS_WRITE,
@@ -312,6 +312,8 @@ namespace Example
                         { -0.0f, -500.0f},
                         { +500.0f, -500.0f}
                     };
+                    memcpy_s(subresource.pData, subresource.RowPitch, Coordinates, sizeof(Coordinates));
+
                 }
                 DeviceContext->Unmap(Buffer::Vertex, 0);
 
