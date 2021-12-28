@@ -66,8 +66,8 @@
     <ClInclude Include="Shader\Bytecode\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211227_자원갱신_외부라이브러리연결_레스터라이져\Entry.cpp" />
-    <ClCompile Include="211227_자원갱신_외부라이브러리연결_레스터라이져\Example.cpp" />
+    <ClCompile Include="211228_Image출력\Entry.cpp" />
+    <ClCompile Include="211228_Image출력\Example.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

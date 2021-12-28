@@ -89,8 +89,8 @@ namespace Example
                 {
                     D3D11_INPUT_ELEMENT_DESC const Descriptor[2]
                     {
-                        {"POSITION",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0},
-                        {"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,1}
+                        {"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0},
+                        {"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,1}
                     };
 
 
@@ -149,12 +149,12 @@ namespace Example
                 //Vertex buffer
 
 
-                float const Coordinates[4][4]
+                float const Coordinates[4][2]
                 {
-                    { -0.5f, +0.5f, 0.0f, 1.0f},
-                    { +0.5f, +0.5f, 0.0f, 1.0f},
-                    { -0.5f, -0.5f, 0.0f, 1.0f},
-                    { +0.5f, -0.5f, 0.0f, 1.0f}
+                    { -0.5f, +0.5f},
+                    { +0.5f, +0.5f},
+                    { -0.5f, -0.5f},
+                    { +0.5f, -0.5f}
                 };
 
                 D3D11_BUFFER_DESC const Descritor 
@@ -221,7 +221,7 @@ namespace Example
                 );
 
 
-                UINT const Stride = sizeof(float[4]);//정점 하나의 크기(보폭) 
+                UINT const Stride = sizeof(float[2]);//정점 하나의 크기(보폭) 
                 UINT const Offset = 0;//몇개 건너 뛸지
                 DeviceContext->IASetVertexBuffers
                 (
@@ -231,7 +231,55 @@ namespace Example
                     &Stride,
                     &Offset
                 );
+            }
+            {
+                char const *const File = "./image/Free.png";
 
+                FreeImage_Initialise();
+                {
+                    FIBITMAP * Bitmap = FreeImage_Load(FreeImage_GetFileType(File),File);
+                    {
+                        //DIB : Device Independant Bitmap
+                        D3D11_TEXTURE2D_DESC Descriptor = D3D11_TEXTURE2D_DESC();
+                        Descriptor.Width               = FreeImage_GetWidth(Bitmap);
+                        Descriptor.Height              = FreeImage_GetHeight(Bitmap);
+                        Descriptor.MipLevels           = 1;//0 -> 가능한 모든 밉맵을 생성
+                        Descriptor.ArraySize           = 1;
+                        Descriptor.Format              = DXGI_FORMAT_R8G8B8A8_UNORM;
+                        Descriptor.SampleDesc.Count    = 1;
+                        Descriptor.SampleDesc.Quality  = 0;
+                        Descriptor.Usage               = D3D11_USAGE_IMMUTABLE;
+                        Descriptor.BindFlags           = D3D11_BIND_SHADER_RESOURCE;
+                        Descriptor.CPUAccessFlags      = 0;
+                        Descriptor.MiscFlags           = 0;
+
+                        D3D11_SUBRESOURCE_DATA Subresource = D3D11_SUBRESOURCE_DATA();
+
+                        Subresource.pSysMem           = FreeImage_GetBits(Bitmap);
+                        //헤더를 제외한 순수 bits 만 가져온다
+                        Subresource.SysMemPitch       = FreeImage_GetPitch(Bitmap); //2차원 이상의 데이터에서 사용
+                                                           //자원의 행에대한 바이트width를 정해서 넣는다
+                        Subresource.SysMemSlicePitch  = 0;     //3차원을 대상으로 하는 데이터
+
+                        ID3D11Texture2D * Texture2d = nullptr;
+                        MUST(Device->CreateTexture2D
+                        (
+                            &Descriptor,
+                            &Subresource,
+                            &Texture2d
+                        ));
+                        {
+                            ID3D11ShaderResourceView * SRV = nullptr;
+                            Device->CreateShaderResourceView(Texture2d,nullptr,&SRV);
+
+                            DeviceContext->PSSetShaderResources(0,1,&SRV);
+                            SRV->Release();
+                        }
+                        Texture2d->Release();
+                    }
+                    FreeImage_Unload(Bitmap);
+                }
+                FreeImage_DeInitialise();
             }
             return 0;
         }
@@ -257,23 +305,13 @@ namespace Example
                     &subresource
                 ));
                 {
-                    //입력할 자원 갱신
-                    float static Intensity = 0.0f;
-                    float static Delta = 5.0f/60.0f;
-                    float const Elements[4][4]
+                    float const Coordinates[4][2]
                     {
-                        {Intensity,      0.0f,      0.0f, 1.0f},
-                        {     0.0f, Intensity,      0.0f, 1.0f},
-                        {     0.0f,      0.0f, Intensity, 1.0f},
-                        {Intensity, Intensity, Intensity, 1.0f},
+                        { -0.0f, +0.0f},
+                        { +500.0f, +0.0f},
+                        { -0.0f, -500.0f},
+                        { +500.0f, -500.0f}
                     };
-                    Intensity += Delta;
-
-                    if (Intensity < 0.0f or 5.0f < Intensity)
-                        Delta *= -1;
-
-                    memcpy_s(subresource.pData,subresource.RowPitch,Elements,sizeof(Elements));
-
                 }
                 DeviceContext->Unmap(Buffer::Vertex, 0);
 
@@ -284,7 +322,7 @@ namespace Example
                 //인덱스 개수, 시작 인덱스, 0으로 할 인덱스
                 DeviceContext->Draw(4,0);
 
-                MUST(SwapChain->Present(1,0));
+                MUST(SwapChain->Present(0,0));
 
                 float const Color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
