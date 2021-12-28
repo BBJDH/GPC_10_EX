@@ -202,7 +202,7 @@ namespace Example
                 //-> 0 1 2, 1(중간점) 2 3(추가점) 순으로 그린다
             }
             {
-                //Vertex buffer
+                //Pixel buffer
 
 
                 D3D11_BUFFER_DESC Descritor
@@ -307,10 +307,10 @@ namespace Example
                 {
                     float const Coordinates[4][2]
                     {
-                        { -0.0f, +0.0f},
-                        { +500.0f, +0.0f},
-                        { -0.0f, -500.0f},
-                        { +500.0f, -500.0f}
+                        { 0.0f, 500.0f},
+                        { +500.0f, 500.0f},
+                        { 0.0f, 0.0f},
+                        { +500.0f, +0.0f}
                     };
                     memcpy_s(subresource.pData, subresource.RowPitch, Coordinates, sizeof(Coordinates));
 
