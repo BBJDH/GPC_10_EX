@@ -43,9 +43,10 @@ namespace Example
         {
         case WM_CREATE:
         {
+#pragma region Swap Chain 생성
+            //Swap Chain 생성
             {
-                //Swap Chain 생성
-
+                // IDXGISwapChain      * SwapChain; 위 네임스페이스에 생성되어있음
                 DXGI_SWAP_CHAIN_DESC Descriptor = DXGI_SWAP_CHAIN_DESC();
 
                 Descriptor.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//하나의 채널당 얼만큼의 메모리를 할당할지
@@ -55,11 +56,11 @@ namespace Example
                 //Signed NORM : -1 ~ +1 , Unsigned NORM : 0 ~ 1
 
                 Descriptor.SampleDesc.Count = 1;        //최대 32 개까지 가능
-                Descriptor.BufferUsage      = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-                Descriptor.BufferCount      = 1;
-                Descriptor.OutputWindow     = hWindow;
-                Descriptor.Windowed         = true;
-                Descriptor.Flags            = 0;
+                Descriptor.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+                Descriptor.BufferCount = 1;
+                Descriptor.OutputWindow = hWindow;
+                Descriptor.Windowed = true;
+                Descriptor.Flags = 0;
                 //어댑터와 스왑체인은 같은 팩토리에서 생성되어야 한다
                 MUST(D3D11CreateDeviceAndSwapChain
                 (
@@ -77,25 +78,21 @@ namespace Example
                     &DeviceContext
                 ));
             }
+#pragma endregion
+
             {
-                //TODO : IL 생성 및 결합
                 //IL 정보와 버텍스 버퍼와 비교하기위해 셰이더 작성이 필요
                 //hlsl에서 작성한 버텍스 각 성분별로 서술자 기술이 필요(포지션(xyzw)16바이트 컬러16바이트)
-               
-                
-                //Vertex Shader
-
-                #include "../Shader/Bytecode/Vertex.h"
+#pragma region Input LayOut 생성
+#include "../Shader/Bytecode/Vertex.h"
                 {
+                    ID3D11InputLayout* InputLayout = nullptr;
+
                     D3D11_INPUT_ELEMENT_DESC const Descriptor[2]
                     {
                         {"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0},
                         {"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,1}
                     };
-
-
-                    ID3D11InputLayout* InputLayout = nullptr;
-
 
                     MUST(Device->CreateInputLayout
                     (
@@ -109,6 +106,13 @@ namespace Example
                     DeviceContext->IASetInputLayout(InputLayout);
                     InputLayout->Release();
                 }
+#pragma endregion
+
+                DeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+                
+#pragma region Vertex Shader 생성
+                //Vertex Shader
                 {
                     ID3D11VertexShader* VertexShader = nullptr;
 
@@ -119,15 +123,18 @@ namespace Example
                         nullptr,
                         &VertexShader
                     ));
-                    DeviceContext->VSSetShader(VertexShader,nullptr,0);
+                    DeviceContext->VSSetShader(VertexShader, nullptr, 0);
 
                     VertexShader->Release();
 
                 }
+#pragma endregion
+
             }
             {
+#pragma region Pixel Shader 생성
                 //Pixel Shader
-                #include "../Shader/Bytecode/Pixel.h"
+#include "../Shader/Bytecode/Pixel.h"
                 {
                     ID3D11PixelShader* PixelShader = nullptr;
 
@@ -143,21 +150,21 @@ namespace Example
 
                     PixelShader->Release();
                 }
+#pragma endregion
+
             }
-
+#pragma region Vertex buffer 생성
+            //Vertex buffer
             {
-                //Vertex buffer
-
-
+                ID3D11Buffer* buffer = nullptr;
                 float const Coordinates[4][2]
                 {
-                    { -0.5f, +0.5f},
-                    { +0.5f, +0.5f},
-                    { -0.5f, -0.5f},
-                    { +0.5f, -0.5f}
-                };
-
-                D3D11_BUFFER_DESC const Descritor 
+                    { -0.5f, +0.5f}, //0     0 1
+                    { +0.5f, +0.5f}, //1     2 3
+                    { -0.5f, -0.5f}, //2
+                    { +0.5f, -0.5f}  //3
+                };//각 정점의 좌표
+                D3D11_BUFFER_DESC const Descritor
                 {
                     sizeof(Coordinates),
                     D3D11_USAGE_IMMUTABLE,  //불변
@@ -166,14 +173,12 @@ namespace Example
                 };
 
 
-                D3D11_SUBRESOURCE_DATA Subresource = D3D11_SUBRESOURCE_DATA();
+                D3D11_SUBRESOURCE_DATA Subresource = D3D11_SUBRESOURCE_DATA();  //버퍼에 들어갈 리소스 데이터
 
-                Subresource.pSysMem           = Coordinates;
-                Subresource.SysMemPitch       = 0; //2차원 이상의 데이터에서 사용
+                Subresource.pSysMem = Coordinates;
+                Subresource.SysMemPitch = 0; //2차원 이상의 데이터에서 사용
                                                    //자원의 행에대한 바이트width를 정해서 넣는다
-                Subresource.SysMemSlicePitch  = 0;     //3차원을 대상으로 하는 데이터
-                
-                ID3D11Buffer* buffer = nullptr;
+                Subresource.SysMemSlicePitch = 0;     //3차원을 대상으로 하는 데이터
 
 
                 MUST(Device->CreateBuffer
@@ -182,8 +187,6 @@ namespace Example
                     &Subresource,
                     &buffer
                 ));
-
-
                 UINT const Stride = sizeof(*Coordinates);//정점 하나의 크기(보폭) 
                 UINT const Offset = 0;//몇개 건너 뛸지
                 DeviceContext->IASetVertexBuffers
@@ -197,30 +200,29 @@ namespace Example
 
                 buffer->Release();
 
-                DeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
                 //D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP 
                 //-> 0 1 2, 1(중간점) 2 3(추가점) 순으로 그린다
             }
+#pragma endregion
+
+#pragma region Pixel buffer 생성
+
+            //Pixel buffer
             {
-                //Pixel buffer
-
-
+                //ID3D11Buffer* Vertex; 위 네임스페이스에 선언됨
                 D3D11_BUFFER_DESC Descritor
                 {
                     sizeof(float[4][2]),
-                    D3D11_USAGE_DYNAMIC,  
+                    D3D11_USAGE_DYNAMIC,
                     D3D11_BIND_VERTEX_BUFFER,
                     D3D10_CPU_ACCESS_WRITE,
                 };
-
                 Device->CreateBuffer
                 (
                     &Descritor,
                     nullptr,
                     &Buffer::Vertex
                 );
-
-
                 UINT const Stride = sizeof(float[2]);//정점 하나의 크기(보폭) 
                 UINT const Offset = 0;//몇개 건너 뛸지
                 DeviceContext->IASetVertexBuffers
@@ -232,36 +234,39 @@ namespace Example
                     &Offset
                 );
             }
+#pragma endregion
+
+#pragma region 이미지텍스쳐생성(Texture2d, ShaderResourceView)
             {
-                char const *const File = "./image/Free.png";
+                ID3D11Texture2D* Texture2d = nullptr;
+                char const* const File = "./image/Free.png";
 
                 FreeImage_Initialise();
                 {
-                    FIBITMAP * Bitmap = FreeImage_Load(FreeImage_GetFileType(File),File);
+                    FIBITMAP* Bitmap = FreeImage_Load(FreeImage_GetFileType(File), File);
                     {
                         //DIB : Device Independant Bitmap
                         D3D11_TEXTURE2D_DESC Descriptor = D3D11_TEXTURE2D_DESC();
-                        Descriptor.Width               = FreeImage_GetWidth(Bitmap);
-                        Descriptor.Height              = FreeImage_GetHeight(Bitmap);
-                        Descriptor.MipLevels           = 1;//0 -> 가능한 모든 밉맵을 생성
-                        Descriptor.ArraySize           = 1;
-                        Descriptor.Format              = DXGI_FORMAT_R8G8B8A8_UNORM;
-                        Descriptor.SampleDesc.Count    = 1;
-                        Descriptor.SampleDesc.Quality  = 0;
-                        Descriptor.Usage               = D3D11_USAGE_IMMUTABLE;
-                        Descriptor.BindFlags           = D3D11_BIND_SHADER_RESOURCE;
-                        Descriptor.CPUAccessFlags      = 0;
-                        Descriptor.MiscFlags           = 0;
+                        Descriptor.Width = FreeImage_GetWidth(Bitmap);
+                        Descriptor.Height = FreeImage_GetHeight(Bitmap);
+                        Descriptor.MipLevels = 1;//0 -> 가능한 모든 밉맵을 생성
+                        Descriptor.ArraySize = 1;
+                        Descriptor.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                        Descriptor.SampleDesc.Count = 1;
+                        Descriptor.SampleDesc.Quality = 0;
+                        Descriptor.Usage = D3D11_USAGE_IMMUTABLE; 
+                        Descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+                        Descriptor.CPUAccessFlags = 0;
+                        Descriptor.MiscFlags = 0;
 
                         D3D11_SUBRESOURCE_DATA Subresource = D3D11_SUBRESOURCE_DATA();
 
-                        Subresource.pSysMem           = FreeImage_GetBits(Bitmap);
+                        Subresource.pSysMem = FreeImage_GetBits(Bitmap);
                         //헤더를 제외한 순수 bits 만 가져온다
-                        Subresource.SysMemPitch       = FreeImage_GetPitch(Bitmap); //2차원 이상의 데이터에서 사용
+                        Subresource.SysMemPitch = FreeImage_GetPitch(Bitmap); //2차원 이상의 데이터에서 사용
                                                            //자원의 행에대한 바이트width를 정해서 넣는다
-                        Subresource.SysMemSlicePitch  = 0;     //3차원을 대상으로 하는 데이터
+                        Subresource.SysMemSlicePitch = 0;     //3차원을 대상으로 하는 데이터
 
-                        ID3D11Texture2D * Texture2d = nullptr;
                         MUST(Device->CreateTexture2D
                         (
                             &Descriptor,
@@ -269,10 +274,11 @@ namespace Example
                             &Texture2d
                         ));
                         {
-                            ID3D11ShaderResourceView * SRV = nullptr;
-                            Device->CreateShaderResourceView(Texture2d,nullptr,&SRV);
+                            //ShaderResourceView 생성
+                            ID3D11ShaderResourceView* SRV = nullptr;
+                            Device->CreateShaderResourceView(Texture2d, nullptr, &SRV);
 
-                            DeviceContext->PSSetShaderResources(0,1,&SRV);
+                            DeviceContext->PSSetShaderResources(0, 1, &SRV);
                             SRV->Release();
                         }
                         Texture2d->Release();
@@ -281,6 +287,8 @@ namespace Example
                 }
                 FreeImage_DeInitialise();
             }
+#pragma endregion
+
             return 0;
         }
         case WM_APP:
@@ -289,10 +297,7 @@ namespace Example
                 //상호 배제(Mutual Exclusion, Mutex)
                 // 한 개체가 자원에 접근중일 때 다른 개체가 접근 불가하게 하도록 함
                 // ->race condition을 방지
-                //
-
                 //특정자원에 대한 gpu의 접근을 차단하고 cpu로부터 자원을 갱신(lock)
-
 
                 D3D11_MAPPED_SUBRESOURCE subresource = D3D11_MAPPED_SUBRESOURCE();
 
@@ -313,7 +318,6 @@ namespace Example
                         { +500.0f, +0.0f}
                     };
                     memcpy_s(subresource.pData, subresource.RowPitch, Coordinates, sizeof(Coordinates));
-
                 }
                 DeviceContext->Unmap(Buffer::Vertex, 0);
 
