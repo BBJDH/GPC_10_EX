@@ -30,10 +30,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211228_Image출력\Entry.cpp">
+    <ClCompile Include="211229_이미지출력수정_애니메이션출력\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211228_Image출력\Example.cpp">
+    <ClCompile Include="211229_이미지출력수정_애니메이션출력\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
