@@ -60,7 +60,8 @@ namespace Example
                 Descriptor.BufferCount = 1;
                 Descriptor.OutputWindow = hWindow;
                 Descriptor.Windowed = true;
-                Descriptor.Flags = 0;
+                Descriptor.Flags = DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE;
+                //스왑체인이 gdi와 호환가능하게 할지 결정 여부
                 //어댑터와 스왑체인은 같은 팩토리에서 생성되어야 한다
                 MUST(D3D11CreateDeviceAndSwapChain
                 (
@@ -266,10 +267,13 @@ namespace Example
                         Descriptor.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
                         Descriptor.SampleDesc.Count = 1;
                         Descriptor.SampleDesc.Quality = 0;
-                        Descriptor.Usage = D3D11_USAGE_IMMUTABLE; 
+                        Descriptor.Usage = D3D11_USAGE_DEFAULT; 
                         Descriptor.BindFlags = D3D11_BIND_SHADER_RESOURCE;
                         Descriptor.CPUAccessFlags = 0;
-                        Descriptor.MiscFlags = 0;
+                        Descriptor.MiscFlags = D3D11_RESOURCE_MISC_GDI_COMPATIBLE;
+                        //알트 오른쪽 자동완성!
+                        //gdi 호환
+
 
                         D3D11_SUBRESOURCE_DATA Subresource = D3D11_SUBRESOURCE_DATA();
 
@@ -286,6 +290,18 @@ namespace Example
                             &Texture2d
                         ));
                         {
+                            IDXGISurface1 * temp = nullptr;
+                            Texture2d->QueryInterface(IID_PPV_ARGS(&temp));
+                                //어떤 인터페이스를 가지고있는지 묻고 가져오는 것
+                            //
+                            //temp->GetDC();
+
+                            /*
+                            컴퓨트 셰이더, 스테이징 픽셀값 반환 
+                            
+
+                            */
+
                             //ShaderResourceView 생성
                             ID3D11ShaderResourceView* SRV = nullptr;
                             Device->CreateShaderResourceView(Texture2d, nullptr, &SRV);
@@ -404,15 +420,21 @@ namespace Example
                         LOWORD(lParameter),
                         HIWORD(lParameter),
                         DXGI_FORMAT_B8G8R8A8_UNORM,
-                        0
+                        DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE
                     ));
                 }
                 {
                     ID3D11Texture2D * Texture2D = nullptr;
                     //스왑체인의 버퍼는 IDXGISurface1 형태로 존재한다
                     //DXGISurface1* 원래 스크린버퍼의 자료형
+                    IDXGISurface1* Surface=nullptr;
+                    //스왑체인에서 백버퍼를 서페이스 형식으로 받아올 수 있다
+                    HDC hdc;
+                    Surface->GetDC(false, &hdc);//현재 그려진 내용을 버릴지 결정
+                    Surface->ReleaseDC(nullptr);//건드린 dc영역에 대해서 처리, 전체 영역에 대해서 처리
                     MUST(SwapChain->GetBuffer
                     (
+                        
                         0,
                         IID_PPV_ARGS(&Texture2D) //PPV : 보이드 더블 포인터, IID와 보이드 더블포인터를 보내는 매크로
                     ));
@@ -422,6 +444,8 @@ namespace Example
                     Texture2D->Release();
                 }
                 DeviceContext->OMSetRenderTargets(1,&RenderTargetView,nullptr); 
+                //hdc를 릴리즈하면 파이프라인에 렌더타겟이 결합 해제 되므로 재결합이 필요하다.
+
 
             }
             return 0;
@@ -461,3 +485,7 @@ namespace Example
 // OM
 // RendertagetView
 //
+
+
+//Texture2d, DXGISurface1?
+//RTT Render to Texture로 Texture2d에 이미지를 가져와서 마젠타로 지형을 파내고
