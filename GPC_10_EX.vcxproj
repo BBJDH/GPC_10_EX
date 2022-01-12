@@ -66,8 +66,8 @@
     <ClInclude Include="Shader\Bytecode\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211230_\Entry.cpp" />
-    <ClCompile Include="211230_\Example.cpp" />
+    <ClCompile Include="220112_blendstate\Entry.cpp" />
+    <ClCompile Include="220112_blendstate\Example.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -43,8 +43,8 @@ int APIENTRY WinMain
         Window.lpszClass = "Window";  //String terminated by Zero
         Window.lpszName = "Game";    //-> null로 끝나는 문자열
         Window.style = WS_OVERLAPPEDWINDOW; //뒤에 윈도우 붙어야함
-        Window.cx = 500;
-        Window.cy = 500;
+        Window.cx = 1200;
+        Window.cy = 720;
         Window.hInstance = hInstance;
 
         {//윈도우 작업공간 맞추기

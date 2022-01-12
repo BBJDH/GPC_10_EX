@@ -30,10 +30,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="211230_\Entry.cpp">
+    <ClCompile Include="220112_blendstate\Entry.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="211230_\Example.cpp">
+    <ClCompile Include="220112_blendstate\Example.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

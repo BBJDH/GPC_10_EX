@@ -1,22 +1,26 @@
-//hlsl 작성 방식 첫번째
-//void 이지만 out으로 반환된다
 #include "Layout.hlsli"
-struct Input
-{
-    float4 Position : POSITION;
-    float2 TexCoord : TEXCOORD;
-};
 
-Output Shader(const Input input)
+namespace Shader
 {
-    
-    Output output =
+    namespace Resource
     {
-        input.Position,
-        input.TexCoord
-    };
+        cbuffer Transform : register(B0) { matrix World; };
+        cbuffer Transform : register(B1) { matrix View; };
+        cbuffer Transform : register(B2) { matrix Projection; };
+    }
 
-    return output;
+    Layout::Pixel Vertex(const Layout::Vertex Input)
+    {
+        Layout::Pixel Output =
+        {
+            Input.Position,
+            Input.TexCoord
+        };
+        
+        Output.Position = mul(Output.Position, Resource::World);
+        Output.Position = mul(Output.Position, Resource::View);
+        Output.Position = mul(Output.Position, Resource::Projection);
 
+        return Output;
+    }
 }
-//작성한후 컴파일되고 이진코드 상태로 실제로 엘레먼트 디스크립터와 내용을 비교해야한다

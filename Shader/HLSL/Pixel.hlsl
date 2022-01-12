@@ -1,13 +1,16 @@
-//hlsl 작성 방식 첫번째
-//void 이지만 out으로 반환된다
 #include "Layout.hlsli"
 
-Texture2D Texture;
-
-float4 Shader(Output output) : SV_Target //함수 옆의 시멘틱은 반환값이 곧 SV_Target을 의미한다는 문구
+namespace Shader
 {
-    float4 color = Texture.Load(int3(output.TexCoord, 0));
-    if(color.a !=1)
-        discard;
-    return color;
+    const Texture2D Resource : register(T0);
+    
+    Layout::Color Pixel(const Layout::Pixel Input) : SV_TARGET
+    {
+        Layout::Color Output =
+        {
+            Resource.Load(int3(Input.TexCoord.x, Input.TexCoord.y, 0))
+        };
+
+        return Output;
+    }
 }
